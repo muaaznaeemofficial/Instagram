@@ -36,3 +36,4 @@ msbuild.wrn
 # Visual Studio 2015
 .vs/
 /InstagramBackend/Backend/appsettings.Development.json
+/InstagramBackend/Backend/logs

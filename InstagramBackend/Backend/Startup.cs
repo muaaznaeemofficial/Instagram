@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using NLog;
+using System.IO;
 
 namespace Backend
 {
@@ -11,7 +13,9 @@ namespace Backend
     {
         public Startup(IConfiguration configuration)
         {
-            Configuration = configuration;
+            LogManager.LoadConfiguration(string.Concat(Directory.GetCurrentDirectory(), "/nlog.config"));
+            Configuration =
+                       Configuration = configuration;
         }
 
         public IConfiguration Configuration { get; }
@@ -22,6 +26,7 @@ namespace Backend
 
             services.AddControllers();
             services.ConfigureSwagger();
+            services.ConfigureLoggerService();
 
         }
 
