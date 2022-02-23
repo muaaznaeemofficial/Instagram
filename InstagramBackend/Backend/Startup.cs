@@ -27,6 +27,7 @@ namespace Backend
             services.ConfigureSwagger();
             services.ConfigureLoggerService();
             services.ConfigureSqlContext(Configuration);
+            services.AddAuthentication();
             services.ConfigureIdentity();
         }
 

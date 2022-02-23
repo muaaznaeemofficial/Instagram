@@ -1,5 +1,8 @@
+using Backend.Data;
+using LoggerService;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System;
@@ -13,7 +16,29 @@ namespace Backend
     {
         public static void Main(string[] args)
         {
-            CreateHostBuilder(args).Build().Run();
+            var host = CreateHostBuilder(args).Build();
+            var logger = host.Services.GetRequiredService<ILoggerManager>();
+            logger.LogInfo("Starting the Host");
+            CreateDbIfNotExists(host, logger);
+            host.Run();
+        }
+        private static void CreateDbIfNotExists(IHost host, ILoggerManager logManager)
+        {
+            using (var scope = host.Services.CreateScope())
+            {
+                var services = scope.ServiceProvider;
+                try
+                {
+                    Seeder.SeedUsers(services).Wait();
+                    logManager.LogInfo("Users seeded successfully");
+                }
+                catch (Exception ex)
+                {
+                    var logger = services.GetRequiredService<ILogger<Program>>();
+                    logger.LogError(ex, "An error occurred creating the DB.");
+                    logManager.LogError(ex.ToString());
+                }
+            }
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>

@@ -20,7 +20,7 @@ namespace Backend.Extentions
         }
 
         public static void ConfigureLoggerService(this IServiceCollection services) =>
-         services.AddScoped<ILoggerManager, LoggerManager>();
+         services.AddSingleton<ILoggerManager, LoggerManager>();
 
 
         public static void ConfigureSqlContext(this IServiceCollection services, IConfiguration configuration) =>
@@ -29,7 +29,7 @@ namespace Backend.Extentions
 
         public static void ConfigureIdentity(this IServiceCollection services)
         {
-            services.AddIdentityCore<AppUser>().AddEntityFrameworkStores<AppDbContext>().AddDefaultTokenProviders();
+            services.AddIdentity<AppUser, IdentityRole>().AddEntityFrameworkStores<AppDbContext>().AddDefaultTokenProviders();
         }
 
     }
