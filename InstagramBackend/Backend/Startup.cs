@@ -1,4 +1,6 @@
 using Backend.Extentions;
+using Backend.Services;
+using Backend.Services.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -27,8 +29,13 @@ namespace Backend
             services.ConfigureSwagger();
             services.ConfigureLoggerService();
             services.ConfigureSqlContext(Configuration);
+            services.ConfigureJWT(Configuration);
             services.AddAuthentication();
             services.ConfigureIdentity();
+            services.AddScoped<IAuthenticationManager, AuthenticationManager>();
+
+
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -44,7 +51,7 @@ namespace Backend
             app.UseHttpsRedirection();
 
             app.UseRouting();
-            app.UseAuthorization();
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
