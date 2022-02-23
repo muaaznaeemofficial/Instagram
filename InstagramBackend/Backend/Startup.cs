@@ -14,8 +14,7 @@ namespace Backend
         public Startup(IConfiguration configuration)
         {
             LogManager.LoadConfiguration(string.Concat(Directory.GetCurrentDirectory(), "/nlog.config"));
-            Configuration =
-                       Configuration = configuration;
+            Configuration = configuration;
         }
 
         public IConfiguration Configuration { get; }
@@ -27,7 +26,8 @@ namespace Backend
             services.AddControllers();
             services.ConfigureSwagger();
             services.ConfigureLoggerService();
-
+            services.ConfigureSqlContext(Configuration);
+            services.ConfigureIdentity();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -43,7 +43,7 @@ namespace Backend
             app.UseHttpsRedirection();
 
             app.UseRouting();
-
+            app.UseAuthorization();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
