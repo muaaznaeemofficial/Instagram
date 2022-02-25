@@ -1,4 +1,5 @@
 ﻿using LoggerService;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -6,6 +7,7 @@ using System.Linq;
 
 namespace Backend.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("[controller]")]
     public class WeatherForecastController : ControllerBase
@@ -22,6 +24,8 @@ namespace Backend.Controllers
         }
 
         [HttpGet]
+        [Authorize(AuthenticationSchemes = "Bearer")]
+
         public IEnumerable<WeatherForecast> Get()
         {
             var rng = new Random();
