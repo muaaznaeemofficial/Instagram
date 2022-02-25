@@ -22,9 +22,12 @@ namespace Backend
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
+
         public void ConfigureServices(IServiceCollection services)
         {
 
+
+            services.ConfigureCors();
             services.AddControllers();
             services.ConfigureSwagger();
             services.ConfigureLoggerService();
@@ -51,6 +54,7 @@ namespace Backend
             app.UseHttpsRedirection();
 
             app.UseRouting();
+            app.UseCors();
             app.UseAuthentication();
             app.UseAuthorization();
 

@@ -4,8 +4,6 @@ using LoggerService;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -36,12 +34,15 @@ namespace Backend.Controllers
                 }
                 return Ok(new { Token = await _authManager.CreateToken() });
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                _logger.LogError($" {nameof(Authenticate)} {e.Message}");
                 return BadRequest(new { message = "Something bad happened." });
             }
 
         }
+
+
 
 
     }
