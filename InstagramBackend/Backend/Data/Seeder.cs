@@ -1,5 +1,6 @@
 ﻿
 using Backend.Constants;
+using Backend.Data.SeedData;
 using Backend.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
@@ -20,26 +21,36 @@ namespace Backend.Data
 
 
             //Admin
-            var admin = new AppUser
-            {
+            var adminUser = DefaultUsers.AdminUser();
 
-                PhoneNumber = "+098765433",
-                UserName = "ad@g.com",
-                Email = "ad@g.com",
-                EmailConfirmed = true,
-                LockoutEnabled = false,
-                SecurityStamp = Guid.NewGuid().ToString()
-            };
-
+            //Admin role
             if (!_context.Roles.Any(r => r.Name == AppConstants.RoleAdmin))
             {
                 await _roleManager.CreateAsync(new IdentityRole { Name = AppConstants.RoleAdmin });
             }
 
-            if (!_context.Users.Any(u => u.UserName == admin.UserName))
+            //Admin user
+            if (!_context.Users.Any(u => u.UserName == adminUser.UserName))
             {
-                await _userManager.CreateAsync(admin, "Ad@123");
-                await _userManager.AddToRoleAsync(admin, AppConstants.RoleAdmin);
+                await _userManager.CreateAsync(adminUser, PasswordConstants.AdminPassword);
+                await _userManager.AddToRoleAsync(adminUser, AppConstants.RoleAdmin);
+            }
+
+
+            //User Role
+            if (!_context.Roles.Any(r => r.Name == AppConstants.RoleUser))
+            {
+                await _roleManager.CreateAsync(new IdentityRole { Name = AppConstants.RoleUser });
+            }
+
+            //Users
+            foreach (var user in SeedingContext.GetUsers())
+            {
+                if (!_context.Users.Any(u => u.UserName == user.UserName))
+                {
+                    await _userManager.CreateAsync(user, PasswordConstants.UserPassword);
+                    await _userManager.AddToRoleAsync(user, AppConstants.RoleUser);
+                }
             }
 
             await _context.SaveChangesAsync();
