@@ -1,5 +1,6 @@
 ﻿using Backend.Data;
 using Backend.DTO.Follow;
+using Backend.DTO.User;
 using Backend.Models;
 using LoggerService;
 using Microsoft.AspNetCore.Authorization;
@@ -15,6 +16,8 @@ namespace Backend.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(AuthenticationSchemes = "Bearer")]
+
     public class UsersController : ControllerBase
     {
         private readonly AppDbContext _db;
@@ -27,10 +30,32 @@ namespace Backend.Controllers
 
         }
 
-        [HttpGet("getAll")]
-        public IActionResult GetUsers()
+        [HttpGet("getAll/{id}")]
+        public IActionResult GetUsers(string id)
         {
-            return Ok(_db.Users);
+            try
+            {
+                var users = _db.Users;
+
+                var currentUser = users.Include(x => x.Followee).Where(u => u.Id == id).FirstOrDefault();
+                var followerIds = currentUser.Followee.Select(x => x.FollowerId).ToList();
+
+                var userList = users.Where(u => u.Id != currentUser.Id).Select(user => new UserListDto
+                {
+                    ID = user.Id,
+                    Name = user.Name,
+                    userName = user.UserName,
+                    isFollowing = followerIds.Contains(user.Id)
+                });
+
+                return Ok(userList);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError($" {nameof(GetUsers)} {e.Message}");
+                return BadRequest(new { message = "Something bad happened." });
+            }
+
         }
 
         //[Authorize(AuthenticationSchemes = "Bearer")]
@@ -46,7 +71,7 @@ namespace Backend.Controllers
 
                 var users = _db.Users.Where(x => !followerIds.Contains(x.Id) && x.Id != id).ToList();
 
-                var suggestions = users.Select(user => new FollowSuggestionDto { ID = user.Id, userName = user.UserName });
+                var suggestions = users.Select(user => new FollowSuggestionDto { ID = user.Id, userName = user.UserName, Name = user.Name });
                 return Ok(suggestions);
             }
             catch (Exception e)

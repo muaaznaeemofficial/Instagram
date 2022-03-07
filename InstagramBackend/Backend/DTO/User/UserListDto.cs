@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Backend.DTO.Follow
+namespace Backend.DTO.User
 {
-    public class FollowSuggestionDto
+    public class UserListDto
     {
         public string ID { get; set; }
         public string userName { get; set; }
         public string Name { get; set; }
-
+        public bool isFollowing { get; set; }
     }
 }

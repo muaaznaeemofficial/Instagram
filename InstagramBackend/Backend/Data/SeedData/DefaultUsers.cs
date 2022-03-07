@@ -17,6 +17,7 @@ namespace Backend.Data.SeedData
             {
                 var user = new AppUser()
                 {
+                    Name = $"User Name{i}",
                     PhoneNumber = "+098765433",
                     UserName = $"user{i}@g.com",
                     Email = $"user{i}@g.com",
@@ -34,7 +35,7 @@ namespace Backend.Data.SeedData
         {
             var admin = new AppUser
             {
-
+                Name = "Admin User",
                 PhoneNumber = "+098765433",
                 UserName = "ad@g.com",
                 Email = "ad@g.com",
