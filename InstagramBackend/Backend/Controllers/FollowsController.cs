@@ -65,44 +65,47 @@ namespace Backend.Controllers
             }
 
         }
-        [HttpGet("followings/{id}")]
-        public IActionResult GetFollowings(string id)
+
+        [HttpPost("followings")]
+        public IActionResult Followings([FromBody] UserFollowListDto user)
         {
             try
             {
-                var currentUser = _db.Users.Include(x => x.Followee).Where(x => x.Id == id).FirstOrDefault();
-                var follwingIds = currentUser.Followee.Select(x => x.FollowerId).ToList();
+                var profileUser = _db.Users.Include(x => x.Followee).Where(x => x.Id == user.ProfileUserId).FirstOrDefault();
+                var currentUser = _db.Users.Include(x => x.Followee).Where(x => x.Id == user.CurrentUserId).FirstOrDefault();
+
+                var follwingIds = profileUser.Followee.Select(x => x.FollowerId).ToList();
                 var followerIds = currentUser.Followee.Select(x => x.FollowerId).ToList();
 
-                var users = _db.Users.Where(x => follwingIds.Contains(x.Id) && x.Id != id).ToList();
+                var users = _db.Users.Where(x => follwingIds.Contains(x.Id) && x.Id != user.ProfileUserId).ToList();
 
-                var suggestions = users.Select(user => new UserListDto { ID = user.Id, userName = user.UserName, Name = user.Name, isFollowing = followerIds.Contains(user.Id) });
+                var suggestions = users.Select(user => new UserListDto { ID = user.Id, userName = user.UserName, Name = user.Name, isFollowing = followerIds.Contains(user.Id), IsCurrentUser = user.Id == currentUser.Id });
                 return Ok(suggestions);
             }
             catch (Exception e)
             {
-                _logger.LogError($" {nameof(GetFollowings)} {e.Message}");
+                _logger.LogError($" {nameof(Followings)} {e.Message}");
                 return BadRequest(new { message = "Something bad happened." });
             }
         }
-
-        [HttpGet("followers/{id}")]
-        public IActionResult GetFollowers(string id)
+        [HttpPost("followers")]
+        public IActionResult GetFollowers([FromBody] UserFollowListDto user)
         {
             try
             {
-                var currentUser = _db.Users.Include(x => x.Follower).Include(x => x.Followee).Where(x => x.Id == id).FirstOrDefault();
-                var follwingIds = currentUser.Follower.Select(x => x.FolloweeId).ToList();
+                var profileUser = _db.Users.Include(x => x.Follower).Include(x => x.Followee).Where(x => x.Id == user.ProfileUserId).FirstOrDefault();
+                var currentUser = _db.Users.Include(x => x.Follower).Include(x => x.Followee).Where(x => x.Id == user.CurrentUserId).FirstOrDefault();
+                var follwingIds = profileUser.Follower.Select(x => x.FolloweeId).ToList();
                 var followerIds = currentUser.Followee.Select(x => x.FollowerId).ToList();
 
-                var users = _db.Users.Where(x => follwingIds.Contains(x.Id) && x.Id != id).ToList();
+                var users = _db.Users.Where(x => follwingIds.Contains(x.Id) && x.Id != user.ProfileUserId).ToList();
 
-                var suggestions = users.Select(user => new UserListDto { ID = user.Id, userName = user.UserName, Name = user.Name, isFollowing = followerIds.Contains(user.Id) });
+                var suggestions = users.Select(user => new UserListDto { ID = user.Id, userName = user.UserName, Name = user.Name, isFollowing = followerIds.Contains(user.Id), IsCurrentUser = user.Id == currentUser.Id });
                 return Ok(suggestions);
             }
             catch (Exception e)
             {
-                _logger.LogError($" {nameof(GetFollowings)} {e.Message}");
+                _logger.LogError($" {nameof(GetFollowers)} {e.Message}");
                 return BadRequest(new { message = "Something bad happened." });
             }
         }

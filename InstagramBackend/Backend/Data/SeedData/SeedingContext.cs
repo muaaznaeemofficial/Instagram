@@ -13,5 +13,11 @@ namespace Backend.Data.SeedData
             return DefaultUsers.Users();
         }
 
+        public static IEnumerable<Post> GetPosts()
+        {
+            return DefaultPosts.Posts();
+        }
+
+
     }
 }

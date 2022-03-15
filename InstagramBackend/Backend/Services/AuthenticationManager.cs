@@ -69,7 +69,7 @@ namespace Backend.Services
             issuer: _configuration["Jwt:Issuer"],
             audience: _configuration["Jwt:Audiance"],
             claims: claims,
-            expires: DateTime.Now.AddMinutes(120),
+            expires: DateTime.Now.AddDays(6),
             signingCredentials: signingCredentials
             );
             return tokenOptions;

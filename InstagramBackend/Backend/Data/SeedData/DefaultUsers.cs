@@ -35,6 +35,7 @@ namespace Backend.Data.SeedData
         {
             var admin = new AppUser
             {
+                Id = "6b8dab10-c398-4e1a-8352-834b5cae2021",
                 Name = "Admin User",
                 PhoneNumber = "+098765433",
                 UserName = "ad@g.com",

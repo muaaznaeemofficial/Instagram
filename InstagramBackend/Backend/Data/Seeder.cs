@@ -53,6 +53,18 @@ namespace Backend.Data
                 }
             }
 
+            //Posts
+
+            foreach (var post in DefaultPosts.Posts())
+            {
+                if (!_context.Posts.Any(p => p.ID == post.ID))
+                {
+                    _context.Posts.Add(post);
+
+                }
+
+            }
+
             await _context.SaveChangesAsync();
         }
 

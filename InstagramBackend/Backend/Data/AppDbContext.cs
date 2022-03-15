@@ -7,6 +7,7 @@ namespace Backend.Data
     public class AppDbContext : IdentityDbContext<AppUser>
     {
         public DbSet<Follow> Follows { get; set; }
+        public DbSet<Post> Posts { get; set; }
 
         public AppDbContext(DbContextOptions options) : base(options)
         {
@@ -26,6 +27,7 @@ namespace Backend.Data
                 .OnDelete(DeleteBehavior.Restrict);
 
             builder.Entity<Follow>()
+
                 .HasOne(u => u.Follower)
                 .WithMany(u => u.Followee)
                 .HasForeignKey(u => u.FolloweeId)

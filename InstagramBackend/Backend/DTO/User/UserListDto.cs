@@ -11,5 +11,7 @@ namespace Backend.DTO.User
         public string userName { get; set; }
         public string Name { get; set; }
         public bool isFollowing { get; set; }
+
+        public bool IsCurrentUser { get; set; }
     }
 }
