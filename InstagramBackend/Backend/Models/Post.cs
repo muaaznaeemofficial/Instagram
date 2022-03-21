@@ -17,6 +17,7 @@ namespace Backend.Models
 
         public DateTime PostTime { get; set; }
 
+        public string ImgPath { get; set; }
         public AppUser PostBy { get; set; }
     }
 }

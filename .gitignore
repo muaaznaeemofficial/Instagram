@@ -37,3 +37,4 @@ msbuild.wrn
 .vs/
 /InstagramBackend/Backend/appsettings.Development.json
 /InstagramBackend/Backend/logs
+/InstagramBackend/Backend/Resources/Images

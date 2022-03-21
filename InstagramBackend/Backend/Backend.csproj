@@ -21,4 +21,8 @@
 		<ProjectReference Include="..\LoggerService\LoggerService.csproj" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Folder Include="Resources\Images\" />
+	</ItemGroup>
+
 </Project>

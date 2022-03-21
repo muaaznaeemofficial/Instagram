@@ -3,8 +3,11 @@ using Backend.Services;
 using Backend.Services.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using NLog;
 using System.IO;
@@ -36,6 +39,12 @@ namespace Backend
             services.AddAuthentication();
             services.ConfigureIdentity();
             services.AddScoped<IAuthenticationManager, AuthenticationManager>();
+            services.Configure<FormOptions>(o =>
+            {
+                o.ValueLengthLimit = int.MaxValue;
+                o.MultipartBodyLengthLimit = int.MaxValue;
+                o.MemoryBufferThreshold = int.MaxValue;
+            });
 
 
 
@@ -52,7 +61,11 @@ namespace Backend
             }
 
             app.UseHttpsRedirection();
-
+            app.UseStaticFiles(new StaticFileOptions()
+            {
+                FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), @"Resources")),
+                RequestPath = new PathString("/Resources")
+            });
             app.UseRouting();
             app.UseCors();
             app.UseAuthentication();

@@ -11,6 +11,7 @@ namespace Backend.DTO.Post
         public string Text { get; set; }
         public string PostById { get; set; }
 
+        public string ImgPath { get; set; }
 
         public string PostByUserName { get; set; }
         public string PostByName { get; set; }
